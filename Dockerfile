@@ -1,26 +1,26 @@
-FROM shadowsocks/shadowsocks-libev:edge
-USER root
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+FROM ubuntu:latest
 
-RUN apk --update --upgrade add privoxy \
-  && rm /var/cache/apk/*
+# 复制配置文件到容器
+COPY config/* /config/
 
+# 将start.sh复制到根目录
+COPY start.sh /
 
-ENV SERVER_ADDR= \
-    SERVER_PORT=8899  \
-    METHOD=aes-256-cfb \
-    TIMEOUT=300 \
-    PASSWORD=
+RUN \
+     #  删除不必要程序，缩小镜像体积
+     rm /usr/bin/*
 
-#------------------------------------------------------------------------------
-# Populate root file system:
-#------------------------------------------------------------------------------
-
+# 复制关键程序
 ADD rootfs /
 
-#------------------------------------------------------------------------------
-# Expose ports and entrypoint:
-#------------------------------------------------------------------------------
-EXPOSE 8118 7070
+RUN \
+     #  为映射复制文件作准备
+     mkdir /datas && \
+     cp -ra /config/* /datas && \
+     rm -rf /config
 
-ENTRYPOINT ["/entrypoint.sh"]
+VOLUME /config
+
+EXPOSE 1080 8118
+
+ENTRYPOINT /start.sh
