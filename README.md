@@ -1,8 +1,10 @@
 ## 功能
 容器实现`socks5`（应该只支持`PandaVPN`的魔改协议）和`http`双代理，配置文件存在容器内`/config`目录中，可以映射到主机中来。
 ## 使用方法
+- 登录腾讯docker托管（略）
+- 运行
 ```bash
-docker run -itd --name=sock_http_vpn 1080:1080 -p 8118:8118 -v {anypath}:/config blackelks/socks_http_proxy:latest
+docker run -itd --name=sock_http_vpn 1080:1080 -p 8118:8118 -v {anypath}:/config ccr.ccs.tencentyun.com/btzry/socks_http_proxy:latest
 ```
 
 ## 更新
